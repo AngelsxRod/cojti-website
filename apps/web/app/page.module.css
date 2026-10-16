@@ -1,0 +1,243 @@
+.page {
+  min-height: 100vh;
+}
+
+.header,
+.footer {
+  max-width: 1440px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header {
+  min-height: 96px;
+  padding: 20px clamp(24px, 5vw, 80px);
+  border-bottom: 1px solid #d8d7c9;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.monogram {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: Georgia, serif;
+  font-size: 14px;
+}
+.header nav {
+  display: flex;
+  gap: 32px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.header nav a:hover,
+.heroLink:hover {
+  color: var(--accent);
+}
+
+.hero {
+  max-width: 1440px;
+  margin: auto;
+  min-height: 650px;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  padding: clamp(32px, 5vw, 80px);
+  gap: 60px;
+  align-items: center;
+}
+.heroContent {
+  padding: 45px 0;
+}
+.eyebrow,
+.sectionNumber {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hero h1 {
+  margin: 28px 0;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(64px, 7.2vw, 112px);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+.hero h1 em {
+  color: var(--accent);
+  font-weight: 400;
+}
+.lead {
+  max-width: 510px;
+  margin: 0;
+  color: #536055;
+  font-size: clamp(18px, 2vw, 22px);
+  line-height: 1.6;
+}
+.heroLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 32px;
+  margin-top: 42px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid currentColor;
+  font-size: 14px;
+  font-weight: 700;
+}
+.heroLink span {
+  font-size: 20px;
+}
+
+.heroArt {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 530px;
+  overflow: hidden;
+  background: #dcd5bd;
+}
+.heroArt::before,
+.heroArt::after {
+  content: '';
+  position: absolute;
+  width: 75%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(37, 52, 44, 0.28);
+  border-radius: 50%;
+}
+.heroArt::after {
+  width: 55%;
+}
+.artLine {
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  background: rgba(37, 52, 44, 0.18);
+  transform: rotate(35deg);
+}
+.artLetters {
+  position: relative;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(160px, 18vw, 280px);
+  line-height: 0.68;
+  letter-spacing: -0.1em;
+  color: #3b5041;
+  transform: translateX(-0.08em);
+}
+.artCaption {
+  position: absolute;
+  bottom: 28px;
+  left: 30px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.about,
+.links {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 2fr;
+  gap: 48px;
+  padding: 95px clamp(24px, 5vw, 80px);
+}
+.about {
+  background: #e8e7dc;
+}
+.about > *,
+.links > * {
+  max-width: 900px;
+}
+.about h2,
+.links h2 {
+  max-width: 720px;
+  margin: 0 0 24px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(42px, 5vw, 68px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+.about p:not(.sectionNumber) {
+  max-width: 630px;
+  margin: 0;
+  color: #536055;
+  font-size: 19px;
+  line-height: 1.7;
+}
+.links {
+  max-width: 1440px;
+  margin: auto;
+}
+.links ul {
+  padding: 0;
+  margin: 40px 0 0;
+  list-style: none;
+}
+.links li {
+  padding: 20px 0;
+  border-top: 1px solid #d8d7c9;
+}
+.links li a {
+  display: flex;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: 700;
+}
+.links li a:hover {
+  color: var(--accent);
+}
+.links li p {
+  color: #536055;
+}
+.footer {
+  padding: 32px clamp(24px, 5vw, 80px);
+  color: #5e6a60;
+  font-size: 12px;
+  border-top: 1px solid #d8d7c9;
+}
+
+@media (max-width: 800px) {
+  .header {
+    min-height: 76px;
+  }
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .heroContent {
+    padding: 40px 0;
+  }
+  .heroArt {
+    min-height: 380px;
+  }
+  .about,
+  .links {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding-top: 70px;
+    padding-bottom: 70px;
+  }
+}
+@media (max-width: 520px) {
+  .header nav {
+    display: none;
+  }
+  .hero h1 {
+    font-size: clamp(54px, 14vw, 76px);
+  }
+  .heroArt {
+    min-height: 300px;
+  }
+  .artLetters {
+    font-size: 180px;
+  }
+}

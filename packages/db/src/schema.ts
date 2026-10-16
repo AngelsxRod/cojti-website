@@ -6,3 +6,5 @@ export const links = pgTable('links', {
   url: text('url').notNull(),
   description: text('description').notNull(),
 });
+
+export * from './auth-schema';

@@ -32,6 +32,24 @@ function availablePort() {
   });
 }
 
+function assertWebPortAvailable() {
+  return new Promise((resolvePort, reject) => {
+    const server = createServer();
+    server.once('error', (error) => {
+      if (error.code === 'EADDRINUSE') {
+        reject(
+          new Error(
+            'El puerto 3001 ya está ocupado. Revisa http://localhost:3001 y detén el servidor anterior antes de ejecutar pnpm dev otra vez.',
+          ),
+        );
+      } else {
+        reject(error);
+      }
+    });
+    server.listen(3001, () => server.close(resolvePort));
+  });
+}
+
 async function main() {
   if (!existsSync(envPath) && !env.DATABASE_URL) {
     const password = randomBytes(32).toString('hex');
@@ -72,6 +90,8 @@ async function main() {
     throw new Error('Set a long BETTER_AUTH_SECRET in .env.');
   }
   env.BETTER_AUTH_URL ||= 'http://localhost:3001';
+
+  await assertWebPortAvailable();
 
   if (!env.DATABASE_URL) {
     if (

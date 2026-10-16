@@ -1,4 +1,5 @@
 import type { Link } from '@cojti/api';
+import NextLink from 'next/link';
 
 import styles from './page.module.css';
 
@@ -34,6 +35,7 @@ export default async function Home() {
         <nav aria-label="Navegación principal">
           <a href="#acerca">Acerca del sitio</a>
           {links.length > 0 && <a href="#enlaces">Enlaces</a>}
+          <NextLink href="/cuenta">Cuenta</NextLink>
         </nav>
       </header>
 

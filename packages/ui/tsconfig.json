@@ -1,0 +1,17 @@
+{
+  "extends": "@cojti/typescript-config/react-library.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "strictNullChecks": true,
+    "paths": {
+      "@cojti/ui/components": ["./src/components"],
+      "@cojti/ui/components/*": ["./src/components/*"],
+      "@cojti/ui/lib": ["./src/lib"],
+      "@cojti/ui/lib/*": ["./src/lib/*"],
+      "@cojti/ui/hooks": ["./src/hooks"],
+      "@cojti/ui/hooks/*": ["./src/hooks/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@cojti/db",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/entry.js",
+  "types": "./dist/entry.d.ts",
+  "files": [
+    "dist/**",
+    "drizzle/**"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/entry.d.ts",
+      "default": "./dist/entry.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "check-types": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "node dist/migrate.js"
+  },
+  "devDependencies": {
+    "@cojti/typescript-config": "workspace:*",
+    "@types/node": "26.6.5",
+    "@types/pg": "8.23.1",
+    "drizzle-kit": "0.31.11",
+    "typescript": "7.0.2"
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.4",
+    "pg": "8.23.1"
+  }
+}

@@ -4,7 +4,7 @@ Sitio personal con una web Next.js, una API NestJS y PostgreSQL. Los paquetes co
 
 ## Docker
 
-Copie `.env.example` a `.env` y reemplace ambos valores por secretos largos. La contraseña de PostgreSQL debe usar caracteres seguros para una URL (letras, números, guiones o guiones bajos).
+Copie `.env.example` a `.env` y reemplace las contraseñas y secretos de ejemplo por valores largos y aleatorios. La contraseña de PostgreSQL debe usar caracteres seguros para una URL (letras, números, guiones o guiones bajos). Configure `BETTER_AUTH_URL` con el origen público exacto de la web; use HTTPS fuera del desarrollo local.
 
 ```bash
 cp .env.example .env
@@ -22,7 +22,20 @@ pnpm install
 pnpm dev
 ```
 
-En el primer inicio, `pnpm dev` crea un `.env` ignorado por Git con credenciales aleatorias. Después levanta PostgreSQL con Compose, aplica las migraciones e inicia la web y la API. Si ya tiene un `.env`, conserva sus valores. También puede proporcionar `DATABASE_URL` para usar una base de datos existente sin iniciar Compose. La web estará en `http://localhost:3001` y la API en `http://localhost:3000`. `LINKS_WRITE_API_KEY` se usa para las escrituras de `/links`; las lecturas son públicas.
+En el primer inicio, `pnpm dev` crea un `.env` ignorado por Git con credenciales aleatorias, incluido `BETTER_AUTH_SECRET`. Después levanta PostgreSQL con Compose, aplica las migraciones e inicia la web y la API. Si ya tiene un `.env` sin secreto de autenticación, añade uno nuevo sin cambiar los valores existentes. También puede proporcionar `DATABASE_URL` para usar una base de datos existente sin iniciar Compose. La web estará en `http://localhost:3001` y la API en `http://localhost:3000`. `LINKS_WRITE_API_KEY` se usa para las escrituras de `/links`; las lecturas son públicas.
+
+## Autenticación
+
+`@cojti/auth` configura Better Auth con correo y contraseña y el adaptador Drizzle. La web ofrece `/auth` para registro e inicio de sesión, `/cuenta` como página protegida y `/api/auth/*` como API de autenticación del mismo origen. El paquete expone un cliente React y un servicio de servidor para validar sesiones. La API NestJS de enlaces conserva su clave `LINKS_WRITE_API_KEY`; sus rutas no usan todavía las sesiones de Better Auth.
+
+Las tablas `user`, `session`, `account` y `verification` se generan en `packages/db/src/auth-schema.ts` y se aplican con las migraciones de Drizzle. Si cambia la configuración de Better Auth o agrega plugins, actualice `packages/auth/auth.ts` y `packages/auth/src/server.ts`, genere de nuevo el esquema y revise la migración:
+
+```bash
+pnpm --filter @cojti/auth auth:generate
+pnpm --filter @cojti/db db:generate
+pnpm --filter @cojti/db build
+pnpm --filter @cojti/db db:migrate
+```
 
 ## Interfaz
 
@@ -62,7 +75,7 @@ pnpm check-types
 
 Este proyecto no tiene CI/CD ni usa pull requests. El trabajo se integra mediante ramas, `git merge` y `git push` desde la terminal. Las comprobaciones de Husky se ejecutan localmente al crear cada commit.
 
-Los commits siguen [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) con el formato `tipo(área): descripción`. El hook `.husky/commit-msg` valida el mensaje con commitlint. Las áreas admitidas son `web`, `api`, `db`, `ui`, `config` y `repo`; use `repo` cuando el cambio abarque varias áreas. Los tipos admitidos son `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `chore` y `revert`. Los commits automáticos de merge están permitidos.
+Los commits siguen [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) con el formato `tipo(área): descripción`. El hook `.husky/commit-msg` valida el mensaje con commitlint. Las áreas admitidas son `web`, `api`, `auth`, `db`, `ui`, `config` y `repo`; use `repo` cuando el cambio abarque varias áreas. Los tipos admitidos son `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `chore` y `revert`. Los commits automáticos de merge están permitidos.
 
 Ejemplos:
 

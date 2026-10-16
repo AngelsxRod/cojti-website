@@ -1,0 +1,12 @@
+.git
+.codegraph
+.turbo
+**/node_modules
+**/.next
+**/dist
+**/coverage
+**/*.tsbuildinfo
+.env*
+**/.env*
+.npmrc
+*.log

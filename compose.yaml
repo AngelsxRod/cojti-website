@@ -1,0 +1,70 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: cojti
+      POSTGRES_DB: cojti
+      POSTGRES_PASSWORD: ${COJTI_DB_PASSWORD:?Set COJTI_DB_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '127.0.0.1:${COJTI_DB_PORT:-5432}:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U cojti -d cojti']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      target: migrate
+    environment:
+      DATABASE_URL: postgresql://cojti:${COJTI_DB_PASSWORD:?Set COJTI_DB_PASSWORD in .env}@db:5432/cojti
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: 'no'
+
+  api:
+    build:
+      context: .
+      target: api
+    expose:
+      - '3000'
+    environment:
+      DATABASE_URL: postgresql://cojti:${COJTI_DB_PASSWORD:?Set COJTI_DB_PASSWORD in .env}@db:5432/cojti
+      LINKS_WRITE_API_KEY: ${LINKS_WRITE_API_KEY:?Set LINKS_WRITE_API_KEY in .env}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:3000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      target: web
+    environment:
+      API_URL: http://api:3000
+    ports:
+      - '${COJTI_WEB_PORT:-3001}:3001'
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

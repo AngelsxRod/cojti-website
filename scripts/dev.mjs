@@ -13,6 +13,7 @@ import { createServer } from 'node:net';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const envPath = resolve(root, '.env');
+const nextDevLockPath = resolve(root, 'apps/web/.next/dev/lock');
 const env = { ...process.env };
 
 function run(command, args) {
@@ -48,6 +49,29 @@ function assertWebPortAvailable() {
     });
     server.listen(3001, () => server.close(resolvePort));
   });
+}
+
+function assertNextDevNotRunning() {
+  if (!existsSync(nextDevLockPath)) return;
+
+  let pid;
+  try {
+    pid = JSON.parse(readFileSync(nextDevLockPath, 'utf8')).pid;
+  } catch {
+    return;
+  }
+  if (!Number.isInteger(pid) || pid <= 0) return;
+
+  try {
+    process.kill(pid, 0);
+  } catch (error) {
+    if (error.code === 'ESRCH') return;
+    if (error.code !== 'EPERM') throw error;
+  }
+
+  throw new Error(
+    `Ya hay un servidor Next.js de este proyecto activo (PID ${pid}). Detén su terminal con Ctrl+C o ejecuta kill ${pid} antes de iniciar pnpm dev otra vez.`,
+  );
 }
 
 async function main() {
@@ -91,6 +115,7 @@ async function main() {
   }
   env.BETTER_AUTH_URL ||= 'http://localhost:3001';
 
+  assertNextDevNotRunning();
   await assertWebPortAvailable();
 
   if (!env.DATABASE_URL) {

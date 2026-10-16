@@ -59,6 +59,9 @@ services:
       target: web
     environment:
       API_URL: http://api:3000
+      DATABASE_URL: postgresql://cojti:${COJTI_DB_PASSWORD:?Set COJTI_DB_PASSWORD in .env}@db:5432/cojti
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?Set BETTER_AUTH_SECRET in .env}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://localhost:3001}
     ports:
       - '${COJTI_WEB_PORT:-3001}:3001'
     depends_on:

@@ -4,6 +4,7 @@
     "incremental": false,
     "outDir": "dist",
     "rootDir": "src",
+    "types": ["node"],
     "strictNullChecks": true
   },
   "include": ["src"],

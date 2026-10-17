@@ -1,17 +1,17 @@
 # Demetrio Cojtí Cuxil
 
-Sitio personal con una web Next.js, una API NestJS y PostgreSQL. Los paquetes compartidos viven en `packages/`; `@cojti/db` contiene el esquema Drizzle y las migraciones SQL.
+Sitio personal con una web Next.js, una API NestJS y MariaDB. Los paquetes compartidos viven en `packages/`; `@cojti/db` contiene el esquema Drizzle y las migraciones SQL.
 
 ## Docker
 
-Copie `.env.example` a `.env` y reemplace las contraseñas y secretos de ejemplo por valores largos y aleatorios. La contraseña de PostgreSQL debe usar caracteres seguros para una URL (letras, números, guiones o guiones bajos). Configure `BETTER_AUTH_URL` con el origen público exacto de la web; use HTTPS fuera del desarrollo local.
+Copie `.env.example` a `.env` y reemplace las contraseñas y secretos de ejemplo por valores largos y aleatorios. La contraseña de MariaDB debe usar caracteres seguros para una URL (letras, números, guiones o guiones bajos). Configure `BETTER_AUTH_URL` con el origen público exacto de la web; use HTTPS fuera del desarrollo local.
 
 ```bash
 cp .env.example .env
 docker compose up --build -d
 ```
 
-El sitio queda en `http://localhost:3001`. La API solo está disponible dentro de la red de Compose. PostgreSQL publica el puerto 5432 únicamente en `127.0.0.1` para el desarrollo local. Si los puertos están ocupados, configure `COJTI_WEB_PORT` o `COJTI_DB_PORT` antes de iniciar Compose. La tarea `migrate` aplica las migraciones antes de arrancar la API. `docker compose down` detiene los servicios sin borrar el volumen de datos.
+El sitio queda en `http://localhost:3001`. La API solo está disponible dentro de la red de Compose. MariaDB publica el puerto 3306 únicamente en `127.0.0.1` para el desarrollo local. Si los puertos están ocupados, configure `COJTI_WEB_PORT` o `COJTI_MARIADB_PORT` antes de iniciar Compose. La tarea `migrate` aplica las migraciones antes de arrancar la API. `docker compose down` detiene los servicios sin borrar el volumen de datos. La migración inicia una base vacía en `mariadb_data`; el volumen anterior `postgres_data` no se reutiliza ni se elimina.
 
 ## Desarrollo local
 
@@ -22,7 +22,7 @@ pnpm install
 pnpm dev
 ```
 
-En el primer inicio, `pnpm dev` crea un `.env` ignorado por Git con credenciales aleatorias, incluido `BETTER_AUTH_SECRET`. Después levanta PostgreSQL con Compose, aplica las migraciones e inicia la web y la API. Si ya tiene un `.env` sin secreto de autenticación, añade uno nuevo sin cambiar los valores existentes. También puede proporcionar `DATABASE_URL` para usar una base de datos existente sin iniciar Compose. La web estará en `http://localhost:3001` y la API en `http://localhost:3000`. `LINKS_WRITE_API_KEY` se usa para las escrituras de `/links`; las lecturas son públicas.
+En el primer inicio, `pnpm dev` crea un `.env` ignorado por Git con credenciales aleatorias, incluido `BETTER_AUTH_SECRET`. Después levanta MariaDB con Compose, aplica las migraciones e inicia la web y la API. Si ya tiene un `.env` sin secreto de autenticación, añade uno nuevo sin cambiar los valores existentes. `COJTI_DB_PORT` de la configuración anterior ya no se usa; configure `COJTI_MARIADB_PORT` si necesita otro puerto. También puede proporcionar una URL MySQL/MariaDB en `DATABASE_URL` para usar una base existente sin iniciar Compose. La web estará en `http://localhost:3001` y la API en `http://localhost:3000`. `LINKS_WRITE_API_KEY` se usa para las escrituras de `/links`; las lecturas son públicas.
 
 ## Autenticación
 

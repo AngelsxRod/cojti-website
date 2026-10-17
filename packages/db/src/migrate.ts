@@ -1,15 +1,23 @@
 import { resolve } from 'node:path';
-import { migrate } from 'drizzle-orm/node-postgres/migrator';
+import { drizzle } from 'drizzle-orm/mysql2';
+import { migrate } from 'drizzle-orm/mysql2/migrator';
+import mysql from 'mysql2/promise';
 
-import { createDatabase } from './client';
+import * as schema from './schema';
 
 async function main() {
-  const { db, pool } = createDatabase(process.env.DATABASE_URL);
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) throw new Error('DATABASE_URL is required');
+  const connection = await mysql.createConnection({
+    uri: databaseUrl,
+    timezone: 'Z',
+  });
+  const db = drizzle({ client: connection, schema, mode: 'default' });
 
   try {
     await migrate(db, { migrationsFolder: resolve(__dirname, '../drizzle') });
   } finally {
-    await pool.end();
+    await connection.end();
   }
 }
 

@@ -1,19 +1,12 @@
 {
   "version": "7",
-  "dialect": "postgresql",
+  "dialect": "mysql",
   "entries": [
     {
       "idx": 0,
-      "version": "7",
-      "when": 1792132446421,
-      "tag": "0000_worried_christian_walker",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1792161364639,
-      "tag": "0001_violet_sentry",
+      "version": "5",
+      "when": 1792242926851,
+      "tag": "0000_wild_human_torch",
       "breakpoints": true
     }
   ]

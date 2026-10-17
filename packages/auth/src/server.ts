@@ -37,7 +37,7 @@ export function createAuth({
   const { db, pool } = createDatabase(databaseUrl);
   const auth = betterAuth({
     database: drizzleAdapter(db, {
-      provider: 'pg',
+      provider: 'mysql',
       schema: authSchema,
     }),
     secret,

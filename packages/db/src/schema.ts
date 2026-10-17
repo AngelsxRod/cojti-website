@@ -1,7 +1,7 @@
-import { integer, pgTable, text } from 'drizzle-orm/pg-core';
+import { int, mysqlTable, text } from 'drizzle-orm/mysql-core';
 
-export const links = pgTable('links', {
-  id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+export const links = mysqlTable('links', {
+  id: int('id').primaryKey().autoincrement(),
   title: text('title').notNull(),
   url: text('url').notNull(),
   description: text('description').notNull(),

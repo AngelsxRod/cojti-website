@@ -82,7 +82,7 @@ async function main() {
     const port = await availablePort();
     writeFileSync(
       envPath,
-      `COJTI_DB_PASSWORD=${password}\nCOJTI_DB_PORT=${port}\nLINKS_WRITE_API_KEY=${apiKey}\nBETTER_AUTH_SECRET=${authSecret}\n`,
+      `COJTI_DB_PASSWORD=${password}\nCOJTI_MARIADB_PORT=${port}\nLINKS_WRITE_API_KEY=${apiKey}\nBETTER_AUTH_SECRET=${authSecret}\n`,
       { flag: 'wx', mode: 0o600 },
     );
     console.log('Created .env with local development credentials.');
@@ -134,7 +134,7 @@ async function main() {
     }
 
     run('docker', ['compose', 'up', '-d', '--wait', 'db']);
-    env.DATABASE_URL = `postgresql://cojti:${env.COJTI_DB_PASSWORD}@localhost:${env.COJTI_DB_PORT || '5432'}/cojti`;
+    env.DATABASE_URL = `mysql://cojti:${env.COJTI_DB_PASSWORD}@localhost:${env.COJTI_MARIADB_PORT || '3306'}/cojti`;
   }
 
   run('pnpm', ['--filter', '@cojti/db', 'build']);

@@ -10,11 +10,12 @@ export class LinksService {
   constructor(private readonly database: DatabaseService) {}
 
   async create(values: CreateLinkDto) {
-    const [link] = await this.database.db
+    const [inserted] = await this.database.db
       .insert(links)
       .values(values)
-      .returning();
-    return link;
+      .$returningId();
+    if (!inserted) throw new Error('Link insert did not return an ID');
+    return this.findOne(inserted.id);
   }
 
   findAll() {
@@ -33,22 +34,22 @@ export class LinksService {
   }
 
   async update(id: number, values: UpdateLinkDto) {
-    const [link] = await this.database.db
+    const [result] = await this.database.db
       .update(links)
       .set(values)
-      .where(eq(links.id, id))
-      .returning();
+      .where(eq(links.id, id));
 
-    if (!link) throw new NotFoundException(`Link #${id} was not found`);
-    return link;
+    if (result.affectedRows === 0)
+      throw new NotFoundException(`Link #${id} was not found`);
+    return this.findOne(id);
   }
 
   async remove(id: number) {
-    const [link] = await this.database.db
+    const [result] = await this.database.db
       .delete(links)
-      .where(eq(links.id, id))
-      .returning({ id: links.id });
+      .where(eq(links.id, id));
 
-    if (!link) throw new NotFoundException(`Link #${id} was not found`);
+    if (result.affectedRows === 0)
+      throw new NotFoundException(`Link #${id} was not found`);
   }
 }

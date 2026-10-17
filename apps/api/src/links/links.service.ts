@@ -1,15 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import type { CreateLinkDto, UpdateLinkDto } from '@cojti/api';
 import { links } from '@cojti/db';
 import { asc, eq } from 'drizzle-orm';
 
 import { DatabaseService } from '../database/database.service';
+import { parseCreateLink, parseUpdateLink } from './links-validation';
 
 @Injectable()
 export class LinksService {
   constructor(private readonly database: DatabaseService) {}
 
-  async create(values: CreateLinkDto) {
+  async create(body: unknown) {
+    const values = parseCreateLink(body);
     const [inserted] = await this.database.db
       .insert(links)
       .values(values)
@@ -33,7 +34,8 @@ export class LinksService {
     return link;
   }
 
-  async update(id: number, values: UpdateLinkDto) {
+  async update(id: number, body: unknown) {
+    const values = parseUpdateLink(body);
     const [result] = await this.database.db
       .update(links)
       .set(values)

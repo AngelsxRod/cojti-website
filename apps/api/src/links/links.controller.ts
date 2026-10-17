@@ -14,7 +14,6 @@ import {
 
 import { LinksService } from './links.service';
 import { LinksWriteGuard } from './links-write.guard';
-import { parseCreateLink, parseUpdateLink } from './links-validation';
 
 @Controller('links')
 export class LinksController {
@@ -23,7 +22,7 @@ export class LinksController {
   @Post()
   @UseGuards(LinksWriteGuard)
   create(@Body() body: unknown) {
-    return this.linksService.create(parseCreateLink(body));
+    return this.linksService.create(body);
   }
 
   @Get()
@@ -39,7 +38,7 @@ export class LinksController {
   @Patch(':id')
   @UseGuards(LinksWriteGuard)
   update(@Param('id', ParseIntPipe) id: number, @Body() body: unknown) {
-    return this.linksService.update(id, parseUpdateLink(body));
+    return this.linksService.update(id, body);
   }
 
   @Delete(':id')
